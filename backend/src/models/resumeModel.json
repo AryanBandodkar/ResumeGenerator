@@ -1,0 +1,41 @@
+{
+    "personal": {
+        "name": "",
+        "email": "",
+        "phone": "",
+        "location": "",
+        "linkedin": "",
+        "github": ""
+    },
+    "summary": "",
+    "skills": [],
+    "education": [
+        {
+            "institution": "",
+            "degree": "",
+            "field": "",
+            "startDate": "",
+            "endDate": "",
+            "cgpa": ""
+        }
+    ],
+    "experience": [
+        {
+            "company": "",
+            "role": "",
+            "startDate": "",
+            "endDate": "",
+            "description": []
+        }
+    ],
+    "projects": [
+        {
+            "name": "",
+            "description": [],
+            "technologies": [],
+            "github": "",
+            "link": ""
+        }
+    ],
+    "certifications": []
+}
