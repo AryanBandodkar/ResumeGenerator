@@ -5,7 +5,8 @@
         "phone": "",
         "location": "",
         "linkedin": "",
-        "github": ""
+        "github": "",
+        "portfolio": ""
     },
     "summary": "",
     "skills": [],
@@ -14,6 +15,7 @@
             "institution": "",
             "degree": "",
             "field": "",
+            "location": "",
             "startDate": "",
             "endDate": "",
             "cgpa": ""
@@ -23,9 +25,11 @@
         {
             "company": "",
             "role": "",
+            "location": "",
             "startDate": "",
             "endDate": "",
-            "description": []
+            "description": [],
+            "technologies": []
         }
     ],
     "projects": [
@@ -37,5 +41,12 @@
             "link": ""
         }
     ],
-    "certifications": []
+    "certifications": [
+        {
+            "name": "",
+            "issuer": "",
+            "date": "",
+            "link": ""
+        }
+    ]
 }

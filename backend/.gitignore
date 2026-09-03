@@ -52,3 +52,5 @@ desktop.ini
 # Node runtime
 *.pid
 *.pid.lock
+
+PROJECT_DESCRIPTION.md
