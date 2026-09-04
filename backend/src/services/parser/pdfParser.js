@@ -5,7 +5,7 @@
 */
 import { readFile } from "fs/promises";
 import { extname } from "path";
-import pdfParse from "pdf-parse";
+import { PDFParse } from "pdf-parse";
 import mammoth from "mammoth";
 import { parseText } from "./textParser.js";
 
@@ -24,8 +24,9 @@ export async function parsePDF(filePath) {
 
     let text;
     if (ext === ".pdf") {
-        const data = await pdfParse(buffer);
-        text = data.text;
+        const pdf = new PDFParse({ data: buffer });
+        const result = await pdf.getText();
+        text = result.text;
     } else {
         const result = await mammoth.extractRawText({ buffer });
         text = result.value;
