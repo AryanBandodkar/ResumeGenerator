@@ -7,21 +7,44 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Temporary frontend authentication.
-    // Your partner will replace this with the backend API.
+    setError("");
 
     if (!email || !password) {
       alert("Please enter email and password.");
       return;
     }
 
-    localStorage.setItem("isLoggedIn", "true");
+    setLoading(true);
 
-    navigate("/dashboard");
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        setError(data.message || "Login failed.");
+        return;
+      }
+
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userName", data.data.user.name || "User");
+      localStorage.setItem("authToken", data.data.token);
+
+      navigate("/dashboard");
+    } catch {
+      setError("Unable to connect to the server. Is the backend running?");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -77,8 +100,12 @@ function LoginPage() {
               </button>
             </div>
 
-            <button className="auth-submit" type="submit">
-              Log in
+            {error && (
+              <p className="auth-error">{error}</p>
+            )}
+
+            <button className="auth-submit" type="submit" disabled={loading}>
+              {loading ? "Logging in..." : "Log in"}
             </button>
           </form>
 

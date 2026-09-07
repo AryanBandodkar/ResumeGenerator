@@ -9,6 +9,7 @@ function ResumeInput() {
   const [jobDescription, setJobDescription] = useState("");
   const [resumeFile, setResumeFile] = useState(null);
   const [resumeText, setResumeText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const roles = [
     "Frontend Developer",
@@ -21,7 +22,7 @@ function ResumeInput() {
     "Business Analyst",
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!role) {
@@ -44,23 +45,55 @@ function ResumeInput() {
       return;
     }
 
-    // Temporary data.
-    // Later this will be sent to your partner's backend.
+    setLoading(true);
 
-    const resumeRequest = {
-      role,
-      jobDescription,
-      inputMethod,
-      fileName: resumeFile?.name || null,
-      resumeText,
-    };
+    try {
+      let parsed;
 
-    localStorage.setItem(
-      "resumeRequest",
-      JSON.stringify(resumeRequest)
-    );
+      if (inputMethod === "upload") {
+        const formData = new FormData();
+        formData.append("resume", resumeFile);
+        formData.append(
+          "job",
+          JSON.stringify({ role, jobDescription })
+        );
 
-    navigate("/review-resume");
+        const res = await fetch("/api/parse", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || "Failed to parse resume.");
+        parsed = data.data;
+      } else {
+        const res = await fetch("/api/parse-text", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: resumeText,
+            job: { role, jobDescription },
+          }),
+        });
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || "Failed to parse resume.");
+        parsed = data.data;
+      }
+
+      parsed.job = {
+        role,
+        jobDescription,
+      };
+
+      localStorage.setItem("resumeData", JSON.stringify(parsed));
+
+      navigate("/review-resume");
+    } catch (err) {
+      alert(err.message || "Something went wrong while processing your resume.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -226,8 +259,9 @@ Certifications:`}
           <button
             type="submit"
             className="generate-btn"
+            disabled={loading}
           >
-            Analyze My Resume →
+            {loading ? "Analyzing..." : "Analyze My Resume →"}
           </button>
 
         </form>

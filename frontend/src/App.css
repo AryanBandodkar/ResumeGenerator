@@ -361,6 +361,20 @@ select {
   cursor: pointer;
 }
 
+.auth-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-error {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fdecec;
+  color: #c0392b;
+  font-size: 14px;
+}
+
 .auth-divider {
   text-align: center;
   margin: 25px 0;

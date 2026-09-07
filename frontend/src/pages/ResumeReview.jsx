@@ -1,180 +1,83 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// Empty structure that matches the review form fields.
+// Used when no resume data has been parsed yet.
+const emptyData = {
+  personal: {
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    linkedin: "",
+    github: "",
+    portfolio: "",
+  },
+  summary: "",
+  skills: [],
+  education: [
+    { institution: "", degree: "", field: "", location: "", startDate: "", endDate: "", cgpa: "" },
+  ],
+  experience: [
+    { company: "", role: "", location: "", startDate: "", endDate: "", description: [], technologies: [] },
+  ],
+  projects: [
+    { name: "", description: [], technologies: [], github: "", link: "" },
+  ],
+  certifications: [
+    { name: "", issuer: "", date: "", link: "" },
+  ],
+  job: { role: "", jobDescription: "" },
+};
+
+function loadResumeData() {
+  try {
+    const raw = localStorage.getItem("resumeData");
+    if (!raw) return emptyData;
+    return JSON.parse(raw);
+  } catch {
+    return emptyData;
+  }
+}
+
+// Simple skill matcher that compares the resume skills against keywords
+// found in the target job description.
+function computeAnalysis(skills, jobDescription) {
+  if (!jobDescription) {
+    return {
+      overallMatch: 0,
+      matchedSkills: [],
+      missingSkills: [...skills],
+      recommendedSkills: [],
+    };
+  }
+
+  const desc = jobDescription.toLowerCase();
+  const skillSet = skills || [];
+
+  const matched = skillSet.filter((s) => s && desc.includes(s.toLowerCase()));
+  const missing = skillSet.filter((s) => s && !desc.includes(s.toLowerCase()));
+
+  const recommended = missing.slice(0, 3);
+  const overallMatch = skillSet.length
+    ? Math.round((matched.length / skillSet.length) * 100)
+    : 0;
+
+  return {
+    overallMatch,
+    matchedSkills: matched,
+    missingSkills: missing,
+    recommendedSkills: recommended,
+  };
+}
+
 function ResumeReview() {
   const navigate = useNavigate();
 
-  const [data, setData] = useState({
-    personal: {
-      name: "John Doe",
-      email: "john.doe@example.com",
-      phone: "+91 98765 43210",
-      location: "Goa, India",
-      linkedin: "linkedin.com/in/johndoe",
-      github: "github.com/johndoe",
-      portfolio: "johndoe.dev",
-    },
-
-    summary:
-      "Frontend Developer passionate about building modern, responsive, and user-friendly web applications. Experienced in React, JavaScript, HTML, CSS, and REST APIs. Interested in creating accessible, scalable, and high-performance user interfaces.",
-
-    skills: [
-      "React",
-      "JavaScript",
-      "TypeScript",
-      "HTML",
-      "CSS",
-      "Tailwind CSS",
-      "Node.js",
-      "Git",
-      "GitHub",
-      "REST APIs",
-      "MongoDB",
-      "Figma",
-    ],
-
-    education: [
-      {
-        institution: "Padre Conceicao College of Engineering",
-        degree: "Bachelor of Engineering",
-        field: "Information Technology",
-        location: "Goa, India",
-        startDate: "2023",
-        endDate: "2027",
-        cgpa: "8.2",
-      },
-      {
-        institution: "PM Shri Kendriya Vidyalaya",
-        degree: "Higher Secondary Education",
-        field: "Science",
-        location: "Goa, India",
-        startDate: "2021",
-        endDate: "2023",
-        cgpa: "",
-      },
-    ],
-
-    experience: [
-      {
-        company: "TechNova Solutions",
-        role: "Frontend Developer Intern",
-        location: "Remote",
-        startDate: "May 2026",
-        endDate: "July 2026",
-        description: [
-          "Developed responsive web interfaces using React and JavaScript.",
-          "Built reusable UI components to improve development efficiency.",
-          "Integrated REST APIs to display dynamic application data.",
-          "Improved website responsiveness across desktop and mobile devices.",
-          "Worked with Git and GitHub for version control.",
-        ],
-        technologies: [
-          "React",
-          "JavaScript",
-          "HTML",
-          "CSS",
-          "REST API",
-          "Git",
-        ],
-      },
-    ],
-
-    projects: [
-      {
-        name: "ResumeGen",
-        description: [
-          "Developed an AI-powered resume generator that helps users create professional and ATS-friendly resumes.",
-          "Implemented resume data collection, job-role selection, and job-description matching.",
-          "Designed an interactive resume review interface allowing users to edit extracted information.",
-        ],
-        technologies: [
-          "React",
-          "JavaScript",
-          "Node.js",
-          "MongoDB",
-          "LaTeX",
-        ],
-        github: "https://github.com/johndoe/resumegen",
-        link: "https://resumegen-demo.vercel.app",
-      },
-
-      {
-        name: "CampusConnect",
-        description: [
-          "Built a student platform for sharing campus events, announcements, and resources.",
-          "Created responsive dashboards and reusable React components.",
-          "Implemented authentication and API-based data management.",
-        ],
-        technologies: [
-          "React",
-          "Node.js",
-          "Express",
-          "MongoDB",
-        ],
-        github: "https://github.com/johndoe/campusconnect",
-        link: "https://campusconnect-demo.vercel.app",
-      },
-
-      {
-        name: "Expense Tracker",
-        description: [
-          "Created a web application for tracking personal income and expenses.",
-          "Added category-based expense tracking and monthly summaries.",
-          "Designed a responsive interface for desktop and mobile users.",
-        ],
-        technologies: [
-          "React",
-          "JavaScript",
-          "CSS",
-          "Chart.js",
-        ],
-        github: "https://github.com/johndoe/expense-tracker",
-        link: "https://expense-tracker-demo.vercel.app",
-      },
-    ],
-
-    certifications: [
-      {
-        name: "Meta Front-End Developer",
-        issuer: "Coursera",
-        date: "June 2026",
-        link: "https://coursera.org",
-      },
-      {
-        name: "JavaScript Algorithms and Data Structures",
-        issuer: "freeCodeCamp",
-        date: "March 2026",
-        link: "https://freecodecamp.org",
-      },
-      {
-        name: "React Development",
-        issuer: "Udemy",
-        date: "January 2026",
-        link: "https://udemy.com",
-      },
-    ],
-
-    analysis: {
-      overallMatch: 78,
-
-      matchedSkills: [
-        "React",
-        "JavaScript",
-        "HTML",
-        "CSS",
-      ],
-
-      missingSkills: [
-        "TypeScript",
-        "Accessibility",
-      ],
-
-      recommendedSkills: [
-        "TypeScript",
-        "WCAG",
-        "Next.js",
-      ],
-    },
+  const [data, setData] = useState(() => {
+    const loaded = loadResumeData();
+    const analysis = computeAnalysis(loaded.skills, loaded.job?.jobDescription);
+    return { ...emptyData, ...loaded, analysis };
   });
 
   /* ---------------- PERSONAL ---------------- */

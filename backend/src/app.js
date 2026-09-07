@@ -1,6 +1,8 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import resumeRoutes from "./routes/resumeRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 
@@ -8,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api", resumeRoutes);
+app.use("/api/auth", authRoutes);
 
 
 // for now just to check if the server runs as intended

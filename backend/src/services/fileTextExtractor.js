@@ -1,17 +1,15 @@
 /*
-    What this module does :
-    Extracts text from PDF, DOC, or DOCX files and parses them into
-    structured JSON (format of json is in backend/models/resumeModel.json)
+    Extracts raw text from PDF, DOC, or DOCX files.
+    (Used so the file content can be sent to the Groq parsing API.)
 */
 import { readFile } from "fs/promises";
 import { extname } from "path";
 import { PDFParse } from "pdf-parse";
 import mammoth from "mammoth";
-import { parseText } from "./textParser.js";
 
 const SUPPORTED_EXTENSIONS = [".pdf", ".doc", ".docx"];
 
-export async function parsePDF(filePath) {
+export async function extractTextFromFile(filePath) {
     const ext = extname(filePath).toLowerCase();
 
     if (!SUPPORTED_EXTENSIONS.includes(ext)) {
@@ -36,5 +34,5 @@ export async function parsePDF(filePath) {
         throw new Error("No text content found in the provided file.");
     }
 
-    return parseText(text);
+    return text;
 }

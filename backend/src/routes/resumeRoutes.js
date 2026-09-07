@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import { join, extname } from "path";
 import { existsSync, mkdirSync } from "fs";
-import { parseResume } from "../controllers/resumeController.js";
+import { parseResume, parseResumeText } from "../controllers/resumeController.js";
 
 const uploadDir = join(process.cwd(), "uploads");
 if (!existsSync(uploadDir)) {
@@ -33,5 +33,6 @@ const upload = multer({
 const router = Router();
 
 router.post("/parse", upload.single("resume"), parseResume);
+router.post("/parse-text", parseResumeText);
 
 export default router;

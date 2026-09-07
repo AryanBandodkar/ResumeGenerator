@@ -8,9 +8,12 @@ function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (!name || !email || !password || !confirmPassword) {
       alert("Please fill in all fields.");
@@ -22,13 +25,39 @@ function SignupPage() {
       return;
     }
 
-    // Temporary frontend authentication.
-    // Backend authentication will be added by your partner.
+    setLoading(true);
 
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("userName", name);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-    navigate("/dashboard");
+      const data = await res.json();
+
+      if (!data.success) {
+        setError(data.message || "Signup failed.");
+        return;
+      }
+
+      // If email confirmation is enabled, no session is returned yet.
+      if (!data.data?.token) {
+        alert("Account created! Check your email to confirm your account, then log in.");
+        navigate("/login");
+        return;
+      }
+
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userName", data.data.user.name || name);
+      localStorage.setItem("authToken", data.data.token);
+
+      navigate("/dashboard");
+    } catch {
+      setError("Unable to connect to the server. Is the backend running?");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -85,8 +114,12 @@ function SignupPage() {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
 
-            <button className="auth-submit" type="submit">
-              Create Account
+            {error && (
+              <p className="auth-error">{error}</p>
+            )}
+
+            <button className="auth-submit" type="submit" disabled={loading}>
+              {loading ? "Creating account..." : "Create Account"}
             </button>
           </form>
 
