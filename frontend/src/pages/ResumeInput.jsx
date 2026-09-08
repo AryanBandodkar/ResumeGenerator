@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 function ResumeInput() {
   const navigate = useNavigate();
 
-  const [inputMethod, setInputMethod] = useState("upload");
-  const [role, setRole] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
+  const saved = JSON.parse(localStorage.getItem("resumeInput") || "null");
+
+  const [inputMethod, setInputMethod] = useState(saved?.inputMethod || "upload");
+  const [role, setRole] = useState(saved?.role || "");
+  const [jobDescription, setJobDescription] = useState(saved?.jobDescription || "");
   const [resumeFile, setResumeFile] = useState(null);
-  const [resumeText, setResumeText] = useState("");
+  const [resumeText, setResumeText] = useState(saved?.resumeText || "");
   const [loading, setLoading] = useState(false);
 
   const roles = [
@@ -87,6 +89,7 @@ function ResumeInput() {
       };
 
       localStorage.setItem("resumeData", JSON.stringify(parsed));
+      localStorage.setItem("resumeInput", JSON.stringify({ inputMethod, role, jobDescription, resumeText }));
 
       navigate("/review-resume");
     } catch (err) {
