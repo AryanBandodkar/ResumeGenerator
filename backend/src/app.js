@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import resumeRoutes from "./routes/resumeRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import templateRoutes from "./routes/templateRoutes.js";
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use("/api", resumeRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api", templateRoutes);
 
 
 // for now just to check if the server runs as intended

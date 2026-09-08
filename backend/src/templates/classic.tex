@@ -1,0 +1,79 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{12pt}{6pt}
+
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE\bfseries {{personal.name}}}\\[6pt]
+    {{personal.email}} \quad | \quad {{personal.phone}} \quad | \quad {{personal.location}}\\
+    {{#personal.linkedin}}\href{ {{personal.linkedin}} }{LinkedIn} \quad | \quad {{/personal.linkedin}}{{#personal.github}}\href{ {{personal.github}} }{GitHub} \quad | \quad {{/personal.github}}{{#personal.portfolio}}\href{ {{personal.portfolio}} }{Portfolio}{{/personal.portfolio}}
+\end{center}
+
+{{#summary}}
+\section{Summary}
+ {{summary}}
+{{/summary}}
+
+{{#skills.0}}
+\section{Skills}
+\begin{itemize}[leftmargin=*,nosep]
+ {{#skills}}
+    \item {{.}}
+ {{/skills}}
+\end{itemize}
+{{/skills.0}}
+
+{{#education.0}}
+\section{Education}
+ {{#education}}
+\textbf{ {{institution}} } \hfill {{startDate}} -- {{endDate}}\\
+ {{degree}} in {{field}} \hfill {{location}}\\
+ {{#cgpa}}CGPA: {{cgpa}}{{/cgpa}}
+ {{/education}}
+{{/education.0}}
+
+{{#experience.0}}
+\section{Experience}
+ {{#experience}}
+\textbf{ {{role}} } at \textbf{ {{company}} } \hfill {{startDate}} -- {{endDate}}\\
+ {{location}}
+\begin{itemize}[leftmargin=*,nosep]
+ {{#description}}
+    \item {{.}}
+ {{/description}}
+\end{itemize}
+ {{#technologies_joined}}\textit{Technologies:} {{technologies_joined}}{{/technologies_joined}}
+ {{/experience}}
+{{/experience.0}}
+
+{{#projects.0}}
+\section{Projects}
+ {{#projects}}
+\textbf{ {{name}} }{{#github}} \hfill \href{ {{github}} }{GitHub}{{/github}}{{#link}} \hfill \href{ {{link}} }{Live Demo}{{/link}}\\
+\begin{itemize}[leftmargin=*,nosep]
+ {{#description}}
+    \item {{.}}
+ {{/description}}
+\end{itemize}
+ {{#technologies_joined}}\textit{Technologies:} {{technologies_joined}}{{/technologies_joined}}
+ {{/projects}}
+{{/projects.0}}
+
+{{#certifications.0}}
+\section{Certifications}
+ {{#certifications}}
+\textbf{ {{name}} } -- {{issuer}} \hfill {{date}}{{#link}} \hfill \href{ {{link}} }{Link}{{/link}}\\
+ {{/certifications}}
+{{/certifications.0}}
+
+\end{document}

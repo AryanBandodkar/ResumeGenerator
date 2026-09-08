@@ -1,0 +1,75 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=0.7in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+\titleformat{\section}{\bfseries\scshape}{}{0em}{}[\vspace{-8pt}\rule{\textwidth}{0.4pt}]
+\titlespacing{\section}{0pt}{14pt}{6pt}
+
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushleft}
+    {\LARGE\bfseries {{personal.name}}}\\[4pt]
+    {{personal.email}} \,|\, {{personal.phone}} \,|\, {{personal.location}}\\
+    {{#personal.linkedin}}{{personal.linkedin}} \, {{/personal.linkedin}}{{#personal.github}}{{personal.github}} \, {{/personal.github}}{{#personal.portfolio}}{{personal.portfolio}}{{/personal.portfolio}}
+\end{flushleft}
+
+{{#summary}}
+\section{Summary}
+ {{summary}}
+{{/summary}}
+
+{{#skills.0}}
+\section{Skills}
+{{skills_joined}}
+{{/skills.0}}
+
+{{#education.0}}
+\section{Education}
+ {{#education}}
+\textsc{ {{institution}} } \hfill {{startDate}} -- {{endDate}}\\
+{{degree}} in {{field}} \hfill {{location}}{{#cgpa}} \hfill CGPA: {{cgpa}}{{/cgpa}}
+ {{/education}}
+{{/education.0}}
+
+{{#experience.0}}
+\section{Experience}
+ {{#experience}}
+\textbf{ {{role}} } --- \textbf{ {{company}} } \hfill {{startDate}} -- {{endDate}}\\
+ {{location}}
+\begin{itemize}[leftmargin=*,nosep]
+ {{#description}}
+    \item {{.}}
+ {{/description}}
+\end{itemize}
+ {{#technologies_joined}}\textit{Tech:} {{technologies_joined}}{{/technologies_joined}}
+ {{/experience}}
+{{/experience.0}}
+
+{{#projects.0}}
+\section{Projects}
+ {{#projects}}
+\textbf{ {{name}} }{{#github}} --- \href{ {{github}} }{GitHub}{{/github}}{{#link}} --- \href{ {{link}} }{Demo}{{/link}}\\
+\begin{itemize}[leftmargin=*,nosep]
+ {{#description}}
+    \item {{.}}
+ {{/description}}
+\end{itemize}
+ {{#technologies_joined}}\textit{Tech:} {{technologies_joined}}{{/technologies_joined}}
+ {{/projects}}
+{{/projects.0}}
+
+{{#certifications.0}}
+\section{Certifications}
+ {{#certifications}}
+\textbf{ {{name}} } \hfill {{date}}\\
+ {{issuer}}{{#link}} --- \href{ {{link}} }{Link}{{/link}}
+ {{/certifications}}
+{{/certifications.0}}
+
+\end{document}

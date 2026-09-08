@@ -1,0 +1,83 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=0.65in]{geometry}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\vspace{-6pt}\rule{\textwidth}{1pt}]
+\titlespacing{\section}{0pt}{12pt}{6pt}
+
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+\begin{document}
+
+{\centering
+    {\LARGE\bfseries {{personal.name}}}\\[6pt]
+    {{personal.email}} \, $\cdot$ \, {{personal.phone}} \, $\cdot$ \, {{personal.location}}\\
+    {{#personal.linkedin}}{{personal.linkedin}}{{/personal.linkedin}}{{#personal.github}} \, $\cdot$ \, {{personal.github}}{{/personal.github}}{{#personal.portfolio}} \, $\cdot$ \, {{personal.portfolio}}{{/personal.portfolio}}
+\par}
+
+{{#summary}}
+\section{Professional Summary}
+ {{summary}}
+{{/summary}}
+
+{{#skills.0}}
+\section{Core Competencies}
+\begin{multicols}{2}
+\begin{itemize}[leftmargin=*,nosep]
+ {{#skills}}
+    \item {{.}}
+ {{/skills}}
+\end{itemize}
+\end{multicols}
+{{/skills.0}}
+
+{{#education.0}}
+\section{Education}
+ {{#education}}
+\hfill {{startDate}} -- {{endDate}}\\
+\textbf{ {{degree}} in {{field}} } --- {{institution}} \hfill {{location}}\\
+{{#cgpa}}CGPA: {{cgpa}}{{/cgpa}}
+ {{/education}}
+{{/education.0}}
+
+{{#experience.0}}
+\section{Professional Experience}
+ {{#experience}}
+\hfill {{startDate}} -- {{endDate}}\\
+\textbf{ {{role}} } --- {{company}} \hfill {{location}}
+\begin{itemize}[leftmargin=*,nosep]
+ {{#description}}
+    \item {{.}}
+ {{/description}}
+\end{itemize}
+ {{#technologies_joined}}\textit{Technologies:} {{technologies_joined}}{{/technologies_joined}}
+ {{/experience}}
+{{/experience.0}}
+
+{{#projects.0}}
+\section{Key Projects}
+ {{#projects}}
+\hfill{{#github}} \href{ {{github}} }{GitHub}{{/github}}{{#link}} \, | \, \href{ {{link}} }{Live}{{/link}}\\
+\textbf{ {{name}} }
+\begin{itemize}[leftmargin=*,nosep]
+ {{#description}}
+    \item {{.}}
+ {{/description}}
+\end{itemize}
+ {{#technologies_joined}}\textit{Technologies:} {{technologies_joined}}{{/technologies_joined}}
+ {{/projects}}
+{{/projects.0}}
+
+{{#certifications.0}}
+\section{Certifications \& Licenses}
+ {{#certifications}}
+\textbf{ {{name}} } --- {{issuer}} \hfill {{date}}{{#link}} \hfill \href{ {{link}} }{Verify}{{/link}}\\
+ {{/certifications}}
+{{/certifications.0}}
+
+\end{document}

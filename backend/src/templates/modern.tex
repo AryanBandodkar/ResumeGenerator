@@ -1,0 +1,85 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=0.6in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+\definecolor{accent}{RGB}{0,80,160}
+
+\titleformat{\section}{\large\bfseries\color{accent}}{}{0em}{}[\color{accent}\titlerule]
+\titlespacing{\section}{0pt}{12pt}{6pt}
+
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE\bfseries\color{accent} {{personal.name}}}\\[6pt]
+    {{personal.email}} \quad | \quad {{personal.phone}} \quad | \quad {{personal.location}}\\
+    {{#personal.linkedin}}\href{ {{personal.linkedin}} }{LinkedIn} \quad | \quad {{/personal.linkedin}}{{#personal.github}}\href{ {{personal.github}} }{GitHub} \quad | \quad {{/personal.github}}{{#personal.portfolio}}\href{ {{personal.portfolio}} }{Portfolio}{{/personal.portfolio}}
+\end{center}
+
+{{#summary}}
+\section{Professional Summary}
+ {{summary}}
+{{/summary}}
+
+{{#skills.0}}
+\section{Technical Skills}
+\begin{itemize}[leftmargin=*,nosep]
+ {{#skills}}
+    \item {{.}}
+ {{/skills}}
+\end{itemize}
+{{/skills.0}}
+
+{{#education.0}}
+\section{Education}
+ {{#education}}
+\begin{itemize}[leftmargin=*,nosep]
+    \item \textbf{ {{degree}} in {{field}} } -- {{institution}}\\
+      {{startDate}} -- {{endDate}} \quad {{location}}{{#cgpa}} \quad CGPA: {{cgpa}}{{/cgpa}}
+\end{itemize}
+ {{/education}}
+{{/education.0}}
+
+{{#experience.0}}
+\section{Work Experience}
+ {{#experience}}
+\textbf{ {{role}} } | \textbf{ {{company}} } \hfill {{startDate}} -- {{endDate}}\\
+ {{location}}
+\begin{itemize}[leftmargin=*,nosep]
+ {{#description}}
+    \item {{.}}
+ {{/description}}
+\end{itemize}
+ {{#technologies_joined}}\textit{Technologies:} {{technologies_joined}}{{/technologies_joined}}
+ {{/experience}}
+{{/experience.0}}
+
+{{#projects.0}}
+\section{Projects}
+ {{#projects}}
+\textbf{ {{name}} }{{#github}} \quad | \quad \href{ {{github}} }{GitHub}{{/github}}{{#link}} \quad | \quad \href{ {{link}} }{Live Demo}{{/link}}\\
+\begin{itemize}[leftmargin=*,nosep]
+ {{#description}}
+    \item {{.}}
+ {{/description}}
+\end{itemize}
+ {{#technologies_joined}}\textit{Technologies:} {{technologies_joined}}{{/technologies_joined}}
+ {{/projects}}
+{{/projects.0}}
+
+{{#certifications.0}}
+\section{Certifications}
+\begin{itemize}[leftmargin=*,nosep]
+ {{#certifications}}
+    \item \textbf{ {{name}} } -- {{issuer}} ({{date}}){{#link}} \hfill \href{ {{link}} }{Link}{{/link}}
+ {{/certifications}}
+\end{itemize}
+{{/certifications.0}}
+
+\end{document}
