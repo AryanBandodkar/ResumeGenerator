@@ -1,0 +1,263 @@
+/* ================================
+   RESUME OUTPUT PAGE
+================================ */
+
+.resume-output-page {
+  min-height: 100vh;
+  background: #faf9fc;
+  color: #111827;
+}
+
+/* ================================
+   NAVBAR
+================================ */
+
+.dashboard-nav {
+  height: 60px;
+  border-bottom: 1px solid #e5e1eb;
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 5%;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.logo span {
+  color: #7c3aed;
+}
+
+.back-link {
+  border: none;
+  background: transparent;
+
+  color: #6d28d9;
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.back-link:hover {
+  color: #5b21b6;
+}
+
+/* ================================
+   MAIN CONTAINER
+================================ */
+
+.resume-output-container {
+  max-width: 1100px;
+  margin: 0 auto;
+
+  padding: 70px 30px;
+}
+
+/* ================================
+   HEADER
+================================ */
+
+.output-header {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.step-label {
+  display: inline-block;
+
+  color: #7c3aed;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+
+  margin-bottom: 15px;
+}
+
+.output-header h1 {
+  margin: 0;
+
+  font-size: 44px;
+  font-weight: 800;
+
+  color: #111827;
+}
+
+.output-header p {
+  margin-top: 15px;
+
+  font-size: 17px;
+  color: #64748b;
+}
+
+/* ================================
+   OUTPUT CARD
+================================ */
+
+.output-card {
+  max-width: 650px;
+  margin: 0 auto;
+
+  background: #ffffff;
+
+  border: 1px solid #e4dff0;
+  border-radius: 18px;
+
+  padding: 35px;
+
+  display: flex;
+  align-items: center;
+  gap: 25px;
+
+  box-shadow: 0 10px 30px rgba(30, 20, 60, 0.06);
+}
+
+/* ================================
+   FILE ICON
+================================ */
+
+.output-icon {
+  width: 90px;
+  height: 90px;
+
+  border-radius: 16px;
+
+  background: #eee8ff;
+  color: #7c3aed;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+  font-weight: 800;
+
+  flex-shrink: 0;
+}
+
+/* ================================
+   DETAILS
+================================ */
+
+.output-details h2 {
+  margin: 0 0 12px;
+
+  font-size: 24px;
+  font-weight: 750;
+
+  color: #111827;
+}
+
+.output-details p {
+  margin: 7px 0;
+
+  color: #64748b;
+  font-size: 15px;
+}
+
+.output-details strong {
+  color: #111827;
+}
+
+/* ================================
+   ACTIONS
+================================ */
+
+.output-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 15px;
+
+  margin-top: 35px;
+}
+
+/* Download button */
+
+.download-btn {
+  border: none;
+  border-radius: 10px;
+
+  background: #7c3aed;
+  color: #ffffff;
+
+  padding: 14px 28px;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.download-btn:hover {
+  background: #6d28d9;
+  transform: translateY(-1px);
+}
+
+/* Secondary button */
+
+.secondary-btn {
+  border: 1px solid #ddd6fe;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #111827;
+
+  padding: 13px 24px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.secondary-btn:hover {
+  background: #f5f3ff;
+  border-color: #c4b5fd;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 700px) {
+  .resume-output-container {
+    padding: 45px 20px;
+  }
+
+  .output-header h1 {
+    font-size: 34px;
+  }
+
+  .output-header p {
+    font-size: 15px;
+  }
+
+  .output-card {
+    padding: 25px;
+
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .output-actions {
+    flex-direction: column;
+  }
+
+  .download-btn,
+  .secondary-btn {
+    width: 100%;
+    max-width: 350px;
+  }
+}

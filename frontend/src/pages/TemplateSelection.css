@@ -1,0 +1,469 @@
+/* =========================================
+   TEMPLATE SELECTION PAGE
+========================================= */
+
+.template-page {
+  min-height: 100vh;
+  background: #faf9fc;
+  color: #111827;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.dashboard-nav {
+  height: 70px;
+  padding: 0 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e1eb;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.logo span {
+  color: #7c3aed;
+}
+
+.back-link {
+  border: none;
+  background: transparent;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.back-link:hover {
+  color: #7c3aed;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.template-container {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 50px 0 60px;
+}
+
+
+/* =========================================
+   PAGE HEADING
+========================================= */
+
+.page-heading {
+  margin-bottom: 45px;
+}
+
+.step-label {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #7c3aed;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.page-heading h1 {
+  margin: 0 0 12px;
+  font-size: 36px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.page-heading p {
+  margin: 0;
+  max-width: 650px;
+  color: #6b7280;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   TEMPLATE SECTION
+========================================= */
+
+.template-section {
+  margin-bottom: 55px;
+}
+
+.template-section h2,
+.format-section h2 {
+  margin: 0 0 25px;
+  font-size: 25px;
+  font-weight: 800;
+  color: #111827;
+}
+
+
+/* =========================================
+   TEMPLATE GRID
+   2 COLUMNS = 2 x 2
+========================================= */
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+
+
+/* =========================================
+   TEMPLATE CARD
+========================================= */
+
+.template-card {
+  position: relative;
+  padding: 20px;
+  background: #ffffff;
+  border: 2px solid #e4dfeb;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.template-card:hover {
+  border-color: #bca8ff;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.08);
+}
+
+.template-card.selected {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.08);
+}
+
+
+/* =========================================
+   TEMPLATE PREVIEW
+========================================= */
+
+.template-preview {
+  min-height: 520px;
+  padding: 32px 30px;
+  background: #ffffff;
+  border: 1px solid #e5e1eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+}
+
+
+/* Resume name */
+
+.preview-name {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 25px;
+  font-weight: 900;
+  color: #111827;
+}
+
+
+/* Contact */
+
+.preview-contact {
+  margin-bottom: 25px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 11px;
+}
+
+
+/* Fake resume lines */
+
+.preview-line {
+  width: 100%;
+  height: 4px;
+  margin-bottom: 12px;
+  background: #7c3aed;
+  border-radius: 10px;
+}
+
+.preview-line.short {
+  width: 55%;
+}
+
+
+/* Resume section title */
+
+.preview-section {
+  margin-top: 30px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 900;
+  color: #111827;
+}
+
+
+/* =========================================
+   TEMPLATE INFO
+========================================= */
+
+.template-info {
+  padding: 20px 5px 5px;
+}
+
+.template-info h3 {
+  margin: 0 0 7px;
+  font-size: 23px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.template-info p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   SELECTED BADGE
+========================================= */
+
+.selected-badge {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  padding: 8px 14px;
+  background: #7c3aed;
+  color: #ffffff;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* =========================================
+   FORMAT SECTION
+========================================= */
+
+.format-section {
+  margin-top: 20px;
+  padding-top: 35px;
+  border-top: 1px solid #e5e1eb;
+}
+
+.format-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+
+/* =========================================
+   FORMAT CARD
+========================================= */
+
+.format-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 25px;
+  background: #ffffff;
+  border: 2px solid #e4dfeb;
+  border-radius: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.format-card:hover {
+  border-color: #bca8ff;
+}
+
+.format-card.selected {
+  border-color: #7c3aed;
+  background: #fbf9ff;
+}
+
+
+/* PDF / DOCX box */
+
+.format-icon {
+  width: 75px;
+  height: 75px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee9ff;
+  color: #6d28d9;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+
+/* Format text */
+
+.format-card strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #111827;
+  font-size: 19px;
+}
+
+.format-card span {
+  display: block;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+
+/* Check */
+
+.format-card .format-check {
+  position: absolute;
+  top: 50%;
+  right: 25px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  background: #7c3aed;
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.template-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid #e5e1eb;
+}
+
+.secondary-btn,
+.generate-btn {
+  padding: 16px 26px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+
+/* Back / Review button */
+
+.secondary-btn {
+  background: #ffffff;
+  border: 1px solid #ddd6e5;
+  color: #111827;
+}
+
+.secondary-btn:hover {
+  border-color: #7c3aed;
+  color: #7c3aed;
+}
+
+
+/* Generate button */
+
+.generate-btn {
+  background: #7c3aed;
+  border: 1px solid #7c3aed;
+  color: #ffffff;
+}
+
+.generate-btn:hover {
+  background: #6d28d9;
+  border-color: #6d28d9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.25);
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  .template-container {
+    width: 92%;
+  }
+
+  .template-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .format-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .dashboard-nav {
+    padding: 0 5%;
+  }
+
+  .template-container {
+    width: 92%;
+    padding-top: 35px;
+  }
+
+  .page-heading h1 {
+    font-size: 28px;
+  }
+
+  .template-preview {
+    min-height: 430px;
+    padding: 25px 20px;
+  }
+
+  .template-card {
+    padding: 14px;
+  }
+
+  .selected-badge {
+    top: 20px;
+    right: 20px;
+  }
+
+  .format-card {
+    padding: 20px;
+  }
+
+  .template-actions {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .secondary-btn,
+  .generate-btn {
+    width: 100%;
+  }
+}

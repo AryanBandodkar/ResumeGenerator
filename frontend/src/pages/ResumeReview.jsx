@@ -176,12 +176,14 @@ function ResumeReview() {
   /* ---------------- GENERATE ---------------- */
 
   const handleGenerate = () => {
-    console.log("Final Resume Data:", data);
+  console.log("Final Resume Data:", data);
 
-    alert(
-      "Frontend is ready! Your partner can now connect the Generate Resume API."
-    );
-  };
+  navigate("/template-selection", {
+    state: {
+      resumeData: data,
+    },
+  });
+};
 
   return (
     <div className="review-page">
