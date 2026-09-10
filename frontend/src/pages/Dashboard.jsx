@@ -98,12 +98,12 @@ function Dashboard() {
             <h2>My Resumes</h2>
 
             <p>
-              Your generated resumes will appear here.
+              View and download the resumes you've generated and saved.
             </p>
 
-            <span className="coming-soon">
-              No resumes yet
-            </span>
+            <Link to="/my-resumes">
+              View resumes →
+            </Link>
           </div>
 
         </section>

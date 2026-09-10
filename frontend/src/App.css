@@ -154,7 +154,7 @@ select {
   justify-content: center;
 }
 
-.resume-preview {
+.landing-page .resume-preview {
   width: 360px;
   min-height: 450px;
   background: white;
@@ -851,7 +851,7 @@ select {
     flex-direction: column;
   }
 
-  .resume-preview {
+  .landing-page .resume-preview {
     width: 300px;
   }
 

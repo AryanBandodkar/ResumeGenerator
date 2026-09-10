@@ -1,6 +1,6 @@
 /* ================================
    RESUME OUTPUT PAGE
-================================ */
+   ================================ */
 
 .resume-output-page {
   min-height: 100vh;
@@ -10,7 +10,7 @@
 
 /* ================================
    NAVBAR
-================================ */
+   ================================ */
 
 .dashboard-nav {
   height: 60px;
@@ -51,22 +51,22 @@
 
 /* ================================
    MAIN CONTAINER
-================================ */
+   ================================ */
 
 .resume-output-container {
   max-width: 1100px;
   margin: 0 auto;
 
-  padding: 70px 30px;
+  padding: 50px 30px 70px;
 }
 
 /* ================================
    HEADER
-================================ */
+   ================================ */
 
 .output-header {
   text-align: center;
-  margin-bottom: 45px;
+  margin-bottom: 35px;
 }
 
 .step-label {
@@ -97,77 +97,16 @@
 }
 
 /* ================================
-   OUTPUT CARD
-================================ */
+   PREVIEW WRAPPER
+   ================================ */
 
-.output-card {
-  max-width: 650px;
-  margin: 0 auto;
-
-  background: #ffffff;
-
-  border: 1px solid #e4dff0;
-  border-radius: 18px;
-
-  padding: 35px;
-
-  display: flex;
-  align-items: center;
-  gap: 25px;
-
-  box-shadow: 0 10px 30px rgba(30, 20, 60, 0.06);
-}
-
-/* ================================
-   FILE ICON
-================================ */
-
-.output-icon {
-  width: 90px;
-  height: 90px;
-
-  border-radius: 16px;
-
-  background: #eee8ff;
-  color: #7c3aed;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 18px;
-  font-weight: 800;
-
-  flex-shrink: 0;
-}
-
-/* ================================
-   DETAILS
-================================ */
-
-.output-details h2 {
-  margin: 0 0 12px;
-
-  font-size: 24px;
-  font-weight: 750;
-
-  color: #111827;
-}
-
-.output-details p {
-  margin: 7px 0;
-
-  color: #64748b;
-  font-size: 15px;
-}
-
-.output-details strong {
-  color: #111827;
+.output-preview-wrapper {
+  margin: 0 auto 40px;
 }
 
 /* ================================
    ACTIONS
-================================ */
+   ================================ */
 
 .output-actions {
   display: flex;
@@ -176,7 +115,7 @@
 
   gap: 15px;
 
-  margin-top: 35px;
+  margin-top: 10px;
 }
 
 /* Download button */
@@ -229,7 +168,7 @@
 
 /* ================================
    RESPONSIVE
-================================ */
+   ================================ */
 
 @media (max-width: 700px) {
   .resume-output-container {
@@ -242,13 +181,6 @@
 
   .output-header p {
     font-size: 15px;
-  }
-
-  .output-card {
-    padding: 25px;
-
-    flex-direction: column;
-    text-align: center;
   }
 
   .output-actions {

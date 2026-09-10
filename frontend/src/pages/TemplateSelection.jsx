@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import ResumePreview from "./ResumePreview";
 import "./TemplateSelection.css";
 
 function TemplateSelection() {
@@ -11,6 +12,7 @@ function TemplateSelection() {
 
   const [selectedTemplate, setSelectedTemplate] = useState("modern");
   const [format, setFormat] = useState("pdf");
+  const [loading, setLoading] = useState(false);
 
   // Available templates
   const templates = [
@@ -37,19 +39,41 @@ function TemplateSelection() {
   ];
 
   // Generate Resume
-  const handleGenerate = () => {
-    const finalData = {
-      resumeData: resumeData,
-      template: selectedTemplate,
-      format: format,
-    };
+  const handleGenerate = async () => {
+    setLoading(true);
 
-    console.log("Final Resume Data:", finalData);
+    try {
+      const res = await fetch("/api/templates/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          template: selectedTemplate,
+          format,
+          resume: resumeData,
+        }),
+      });
 
-    // Navigate to Resume Output page
-    navigate("/resume-output", {
-      state: finalData,
-    });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to generate resume.");
+      }
+
+      const blob = await res.blob();
+      const fileUrl = URL.createObjectURL(blob);
+
+      navigate("/resume-output", {
+        state: {
+          resumeData,
+          template: selectedTemplate,
+          format,
+          fileUrl,
+        },
+      });
+    } catch (err) {
+      alert(err.message || "Something went wrong while generating your resume.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -103,37 +127,10 @@ function TemplateSelection() {
               >
                 {/* TEMPLATE PREVIEW */}
                 <div className="template-preview">
-                  <div className="preview-name">YOUR NAME</div>
-
-                  <div className="preview-contact">
-                    email@example.com | +91 98765 43210
-                  </div>
-
-                  <div className="preview-line"></div>
-                  <div className="preview-line short"></div>
-
-                  <div className="preview-section">
-                    PROFESSIONAL SUMMARY
-                  </div>
-
-                  <div className="preview-line"></div>
-                  <div className="preview-line"></div>
-                  <div className="preview-line short"></div>
-
-                  <div className="preview-section">EXPERIENCE</div>
-
-                  <div className="preview-line"></div>
-                  <div className="preview-line"></div>
-                  <div className="preview-line short"></div>
-
-                  <div className="preview-section">EDUCATION</div>
-
-                  <div className="preview-line"></div>
-                  <div className="preview-line short"></div>
-
-                  <div className="preview-section">SKILLS</div>
-
-                  <div className="preview-line"></div>
+                  <ResumePreview
+                    resumeData={resumeData}
+                    template={template.id}
+                  />
                 </div>
 
                 {/* TEMPLATE INFO */}
@@ -220,8 +217,9 @@ function TemplateSelection() {
             type="button"
             className="generate-btn"
             onClick={handleGenerate}
+            disabled={loading}
           >
-            Generate Resume →
+            {loading ? "Generating..." : "Generate Resume →"}
           </button>
         </div>
       </main>

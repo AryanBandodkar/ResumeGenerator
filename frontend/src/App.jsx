@@ -8,6 +8,7 @@ import ResumeInput from "./pages/ResumeInput";
 import ResumeReview from "./pages/ResumeReview";
 import TemplateSelection from "./pages/TemplateSelection";
 import ResumeOutput from "./pages/ResumeOutput";
+import MyResumes from "./pages/MyResumes";
 
 function App() {
   return (
@@ -40,6 +41,12 @@ function App() {
         <Route
           path="/resume-output"
           element={<ResumeOutput />}
+        />
+
+        {/* Saved Resume History */}
+        <Route
+          path="/my-resumes"
+          element={<MyResumes />}
         />
       </Routes>
     </BrowserRouter>

@@ -1,0 +1,271 @@
+/* ================================
+   RESUME PREVIEW
+   Scaled-down A4 representation
+================ ================= */
+
+.resume-preview {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid #e0dbe6;
+  border-radius: 8px;
+  padding: 40px 45px;
+  box-shadow: 0 6px 24px rgba(30, 20, 60, 0.07);
+  font-size: 13px;
+  line-height: 1.55;
+  color: #1a1a1a;
+  font-family: "Calibri", "Segoe UI", Arial, sans-serif;
+}
+
+/* ── Header ── */
+
+.rp-header {
+  margin-bottom: 18px;
+}
+
+.rp-header-center {
+  text-align: center;
+}
+
+.rp-header-left {
+  text-align: left;
+}
+
+.rp-name {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.rp-contact {
+  font-size: 12px;
+  color: #555;
+}
+
+.rp-links {
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.rp-links span {
+  font-weight: 600;
+}
+
+.rp-sep {
+  color: #aaa;
+  margin: 0 4px;
+  font-weight: 400;
+}
+
+.rp-header-rule {
+  margin-top: 12px;
+  border-top: 1px solid #ddd;
+}
+
+/* ── Sections ── */
+
+.rp-section {
+  margin-bottom: 16px;
+}
+
+.rp-section-title {
+  margin: 0 0 8px;
+  padding-bottom: 4px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* ── Section title per template ── */
+
+/* Modern: blue accent, single solid underline */
+.rp-st-modern {
+  border-bottom: 2px solid currentColor;
+}
+
+/* Classic: black, double underline */
+.rp-st-classic {
+  border-bottom: 3px double currentColor;
+}
+
+/* Minimal: no border, italic, no uppercase */
+.rp-st-minimal {
+  border-bottom: none;
+  text-transform: none;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* Professional: teal accent, single thin underline */
+.rp-st-professional {
+  border-bottom: 1.5px solid currentColor;
+  letter-spacing: 1px;
+}
+
+/* ── Text ── */
+
+.rp-text {
+  margin: 0;
+  color: #333;
+  font-size: 12.5px;
+}
+
+/* ── Skills: Modern (tag pills) ── */
+
+.rp-skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rp-skill-tag {
+  padding: 3px 10px;
+  background: #f0ebfa;
+  border: 1px solid;
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ── Skills: Classic (bulleted list) ── */
+
+.rp-skills-list {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.rp-skills-list li {
+  font-size: 12.5px;
+  margin-bottom: 3px;
+  color: #333;
+}
+
+/* ── Skills: Minimal (inline text) ── */
+
+.rp-skills-inline {
+  margin: 0;
+  font-size: 12.5px;
+  color: #444;
+}
+
+/* ── Skills: Professional (two columns) ── */
+
+.rp-skills-columns {
+  display: flex;
+  gap: 20px;
+}
+
+.rp-skills-col {
+  flex: 1;
+}
+
+.rp-skill-col-item {
+  font-size: 12.5px;
+  margin-bottom: 3px;
+  color: #333;
+}
+
+.rp-sq-bullet {
+  font-size: 11px;
+}
+
+/* ── Entries (education / experience / projects) ── */
+
+.rp-entry {
+  margin-bottom: 12px;
+}
+
+.rp-entry-row {
+  font-size: 13px;
+}
+
+.rp-entry-row strong {
+  font-weight: 700;
+}
+
+.rp-entry-meta {
+  font-size: 11.5px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.rp-entry-sub {
+  font-size: 12px;
+  color: #555;
+  margin-top: 1px;
+}
+
+.rp-meta {
+  color: #777;
+}
+
+.rp-bullets {
+  margin: 4px 0 0;
+  padding-left: 20px;
+}
+
+.rp-bullets li {
+  font-size: 12.5px;
+  margin-bottom: 2px;
+  color: #333;
+}
+
+.rp-tech {
+  font-size: 11.5px;
+  color: #666;
+  margin-top: 3px;
+}
+
+.rp-link {
+  cursor: default;
+  font-size: 12px;
+}
+
+/* ── Minimal template: em-dash bullets ── */
+
+.rp-minimal .rp-bullets li::before {
+  content: none;
+}
+
+/* ── Classic template: Georgia-style feel ── */
+
+.rp-classic {
+  font-family: "Georgia", "Cambria", "Times New Roman", serif;
+}
+
+.rp-classic .rp-name {
+  font-family: "Georgia", "Cambria", serif;
+}
+
+.rp-classic .rp-section-title {
+  font-family: "Georgia", "Cambria", serif;
+}
+
+/* ── Professional template ── */
+
+.rp-professional {
+  font-family: "Calibri", "Segoe UI", Arial, sans-serif;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 700px) {
+  .resume-preview {
+    padding: 28px 24px;
+    font-size: 12px;
+  }
+
+  .rp-name {
+    font-size: 20px;
+  }
+
+  .rp-skills-columns {
+    flex-direction: column;
+    gap: 0;
+  }
+}
