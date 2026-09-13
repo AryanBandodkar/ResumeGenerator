@@ -178,28 +178,19 @@
 }
 
 .template-preview .resume-preview .rp-section-title {
-  font-size: 11px;
+  font-size: 12px;
 }
 
-.template-preview .resume-preview .rp-entry-row {
+.template-preview .resume-preview .rp-line {
   font-size: 11px;
 }
 
 .template-preview .resume-preview .rp-text {
-  font-size: 10.5px;
+  font-size: 11px;
 }
 
 .template-preview .resume-preview .rp-bullets li {
-  font-size: 10.5px;
-}
-
-.template-preview .resume-preview .rp-skill-tag {
-  font-size: 10px;
-  padding: 2px 7px;
-}
-
-.template-preview .resume-preview .rp-skill-col-item {
-  font-size: 10.5px;
+  font-size: 11px;
 }
 
 .template-preview .resume-preview .rp-contact,
@@ -207,18 +198,12 @@
   font-size: 10px;
 }
 
-.template-preview .resume-preview .rp-entry-meta,
-.template-preview .resume-preview .rp-entry-sub,
 .template-preview .resume-preview .rp-tech {
   font-size: 10px;
 }
 
 .template-preview .resume-preview .rp-skills-inline {
-  font-size: 10.5px;
-}
-
-.template-preview .resume-preview .rp-skills-list li {
-  font-size: 10.5px;
+  font-size: 11px;
 }
 
 

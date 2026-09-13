@@ -1,5 +1,5 @@
 import { supabase } from "../services/supabaseClient.js";
-import { generateResumeFile } from "../services/fileGenerator.js";
+import { generateResumeFile } from "../services/latexService.js";
 import { VALID_TEMPLATES } from "../services/templateRenderer.js";
 
 // POST /api/resumes

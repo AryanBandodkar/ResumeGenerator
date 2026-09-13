@@ -1,25 +1,103 @@
 import "./ResumePreview.css";
 
-const THEMES = {
-    modern: { accent: "#0050A0" },
-    classic: { accent: "#111111" },
-    minimal: { accent: "#444444" },
-    professional: { accent: "#1B4F5C" },
+// Accent colors defined in each LaTeX template's \definecolor (if any).
+// modern defines RGB(0,80,160); classic/minimal/professional use plain black.
+const ACCENT = {
+    modern: "#0050A0",
+    classic: "#000000",
+    minimal: "#000000",
+    professional: "#000000",
+};
+
+// Section titles exactly as written in each template's \section{...}.
+const TITLES = {
+    summary: {
+        modern: "Professional Summary",
+        classic: "Summary",
+        minimal: "Summary",
+        professional: "Professional Summary",
+    },
+    skills: {
+        modern: "Technical Skills",
+        classic: "Skills",
+        minimal: "Skills",
+        professional: "Core Competencies",
+    },
+    education: {
+        modern: "Education",
+        classic: "Education",
+        minimal: "Education",
+        professional: "Education",
+    },
+    experience: {
+        modern: "Work Experience",
+        classic: "Experience",
+        minimal: "Experience",
+        professional: "Professional Experience",
+    },
+    projects: {
+        modern: "Projects",
+        classic: "Projects",
+        minimal: "Projects",
+        professional: "Key Projects",
+    },
+    certifications: {
+        modern: "Certifications",
+        classic: "Certifications",
+        minimal: "Certifications",
+        professional: "Certifications & Licenses",
+    },
 };
 
 function flatten(arr) {
     return Array.isArray(arr) ? arr.filter(Boolean) : [];
 }
 
-function SectionHeading({ title, template, accentColor }) {
-    const className = `rp-section-title rp-st-${template}`;
-    return <h2 className={className} style={accentColor}>{title}</h2>;
+// LaTeX "start -- end" renders as an en dash.
+function enDash(a, b) {
+    return [a, b].filter(Boolean).join(" – ");
+}
+
+function SectionHeading({ title, template }) {
+    return <h2 className={`rp-section-title rp-st-${template}`}>{title}</h2>;
+}
+
+// A single LaTeX line. "left \hfill right" maps to justify-content: space-between;
+// multiple \hfill (name \hfill A \hfill B) distributes gaps equally, which flex
+// space-between also does.
+function EntryLine({ className = "", children }) {
+    return <div className={`rp-line ${className}`}>{children}</div>;
+}
+
+function Right({ children }) {
+    return <span className="rp-right">{children}</span>;
+}
+
+function Bullets({ items }) {
+    if (!items.length) return null;
+    return (
+        <ul className="rp-bullets">
+            {items.map((d, j) => (
+                <li key={j}>{d}</li>
+            ))}
+        </ul>
+    );
+}
+
+function Tech({ prefix, items }) {
+    if (!items.length) return null;
+    return (
+        <div className="rp-tech">
+            <em>{prefix}</em> {items.join(", ")}
+        </div>
+    );
 }
 
 function ResumePreview({ resumeData, template }) {
     if (!resumeData) return null;
 
-    const theme = THEMES[template] || THEMES.modern;
+    const t = template;
+    const accent = ACCENT[t] || ACCENT.modern;
     const p = resumeData.personal || {};
     const skills = flatten(resumeData.skills);
     const education = flatten(resumeData.education);
@@ -27,100 +105,376 @@ function ResumePreview({ resumeData, template }) {
     const projects = flatten(resumeData.projects);
     const certs = flatten(resumeData.certifications);
 
-    const isMinimal = template === "minimal";
-    const isClassic = template === "classic";
-    const isProfessional = template === "professional";
+    const contacts = [p.email, p.phone, p.location].filter(Boolean);
 
-    const accentColor = { color: theme.accent };
+    // ── Header links (presented differently per template) ──
+    const headerLinks = (() => {
+        if (t === "minimal") {
+            // Raw URLs separated by a thin space (\,).
+            return [p.linkedin, p.github, p.portfolio].filter(Boolean).join("  ");
+        }
+        if (t === "professional") {
+            // Raw URLs separated by " • " ($\cdot$).
+            return [p.linkedin, p.github, p.portfolio].filter(Boolean).join("  •  ");
+        }
+        // modern/classic: labeled anchors separated by " | ".
+        const labels = [];
+        if (p.linkedin) labels.push("LinkedIn");
+        if (p.github) labels.push("GitHub");
+        if (p.portfolio) labels.push("Portfolio");
+        return labels.join(" | ");
+    })();
 
-    // ── Render skills differently per template ──
+    const contactSep = t === "professional" ? "  •  " : " | ";
+
+    // ── Skills ──
     function renderSkills() {
         if (!skills.length) return null;
+        const title = TITLES.skills[t];
 
-        const title = isProfessional ? "Core Competencies" : "Technical Skills";
-
-        if (isProfessional) {
-            // Two-column grid with square bullets
-            const half = Math.ceil(skills.length / 2);
-            const col1 = skills.slice(0, half);
-            const col2 = skills.slice(half);
+        if (t === "minimal") {
+            // {{skills_joined}} — comma separated plain text.
             return (
                 <section className="rp-section">
-                    <SectionHeading title={title} template={template} accentColor={accentColor} />
-                    <div className="rp-skills rp-skills-columns">
-                        <div className="rp-skills-col">
-                            {col1.map((s, i) => <div key={i} className="rp-skill-col-item"><span className="rp-sq-bullet" style={accentColor}>■</span> {s}</div>)}
-                        </div>
-                        <div className="rp-skills-col">
-                            {col2.map((s, i) => <div key={i} className="rp-skill-col-item"><span className="rp-sq-bullet" style={accentColor}>■</span> {s}</div>)}
-                        </div>
-                    </div>
-                </section>
-            );
-        }
-
-        if (isMinimal) {
-            // Comma-separated plain text
-            return (
-                <section className="rp-section">
-                    <SectionHeading title={title} template={template} accentColor={accentColor} />
+                    <SectionHeading title={title} template={t} />
                     <p className="rp-skills-inline">{skills.join(", ")}</p>
                 </section>
             );
         }
 
-        if (isClassic) {
-            // Bulleted list
+        if (t === "professional") {
+            // \begin{multicols}{2} itemize.
+            const half = Math.ceil(skills.length / 2);
             return (
                 <section className="rp-section">
-                    <SectionHeading title={title} template={template} accentColor={accentColor} />
-                    <ul className="rp-skills-list">
-                        {skills.map((s, i) => <li key={i}>{s}</li>)}
-                    </ul>
+                    <SectionHeading title={title} template={t} />
+                    <div className="rp-skills-columns">
+                        <Bullets items={skills.slice(0, half)} />
+                        <Bullets items={skills.slice(half)} />
+                    </div>
                 </section>
             );
         }
 
-        // Modern: dot-separated tags
+        // modern/classic: single \begin{itemize}.
         return (
             <section className="rp-section">
-                <SectionHeading title={title} template={template} accentColor={accentColor} />
-                <div className="rp-skills rp-skills-tags">
-                    {skills.map((s, i) => (
-                        <span key={i} className="rp-skill-tag" style={{ borderColor: theme.accent + "40" }}>
-                            {s}
-                        </span>
-                    ))}
+                <SectionHeading title={title} template={t} />
+                <div>
+                    <Bullets items={skills} />
                 </div>
             </section>
         );
     }
 
+    // ── Education ──
+    function renderEducation() {
+        if (!education.length) return null;
+        return (
+            <section className="rp-section">
+                <SectionHeading title={TITLES.education[t]} template={t} />
+                {t === "modern" ? (
+                    // Each entry is its own \begin{itemize}\item -- {{degree}} in {{field}} -- {{institution}}
+                    <ul className="rp-bullets rp-edu-modern">
+                        {education.map((edu, i) => (
+                            <li key={i}>
+                                <div>
+                                    <strong>{[edu.degree, edu.field].filter(Boolean).join(" in ")}</strong>{" "}
+                                    – {edu.institution}
+                                </div>
+                                <div>
+                                    {enDash(edu.startDate, edu.endDate)}
+                                    <span className="rp-quad" />
+                                    {edu.location}
+                                    {edu.cgpa && (
+                                        <>
+                                            <span className="rp-quad" />
+                                            CGPA: {edu.cgpa}
+                                        </>
+                                    )}
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : t === "classic" ? (
+                    // \textbf{ {{institution}} } \hfill {{startDate}} -- {{endDate}}
+                    // {{degree}} in {{field}} \hfill {{location}}
+                    // {{#cgpa}}CGPA: {{cgpa}}{{/cgpa}}
+                    education.map((edu, i) => (
+                        <div key={i} className="rp-entry">
+                            <EntryLine>
+                                <strong>{edu.institution}</strong>
+                                <Right>{enDash(edu.startDate, edu.endDate)}</Right>
+                            </EntryLine>
+                            <EntryLine>
+                                <span>{[edu.degree, edu.field].filter(Boolean).join(" in ")}</span>
+                                <Right>{edu.location}</Right>
+                            </EntryLine>
+                            {edu.cgpa && <div className="rp-cgpa">CGPA: {edu.cgpa}</div>}
+                        </div>
+                    ))
+                ) : t === "minimal" ? (
+                    // \textsc{ {{institution}} } \hfill {{startDate}} -- {{endDate}}
+                    // {{degree}} in {{field}} \hfill {{location}} \hfill CGPA: {{cgpa}}
+                    education.map((edu, i) => (
+                        <div key={i} className="rp-entry">
+                            <EntryLine>
+                                <span className="rp-sc">{edu.institution}</span>
+                                <Right>{enDash(edu.startDate, edu.endDate)}</Right>
+                            </EntryLine>
+                            <EntryLine>
+                                <span>{[edu.degree, edu.field].filter(Boolean).join(" in ")}</span>
+                                <Right>{edu.location}</Right>
+                                {edu.cgpa && <Right>CGPA: {edu.cgpa}</Right>}
+                            </EntryLine>
+                        </div>
+                    ))
+                ) : (
+                    // professional:
+                    // \hfill {{startDate}} -- {{endDate}}
+                    // \textbf{ {{degree}} in {{field}} } --- {{institution}} \hfill {{location}}
+                    education.map((edu, i) => (
+                        <div key={i} className="rp-entry">
+                            <EntryLine className="rp-line-right">
+                                <Right>{enDash(edu.startDate, edu.endDate)}</Right>
+                            </EntryLine>
+                            <EntryLine>
+                                <span>
+                                    <strong>{[edu.degree, edu.field].filter(Boolean).join(" in ")}</strong>{" "}
+                                    — {edu.institution}
+                                </span>
+                                <Right>{edu.location}</Right>
+                            </EntryLine>
+                            {edu.cgpa && <div className="rp-cgpa">CGPA: {edu.cgpa}</div>}
+                        </div>
+                    ))
+                )}
+            </section>
+        );
+    }
+
+    // ── Experience ──
+    function renderExperience() {
+        if (!experience.length) return null;
+        return (
+            <section className="rp-section">
+                <SectionHeading title={TITLES.experience[t]} template={t} />
+                {experience.map((exp, i) => {
+                    const techPrefix = t === "minimal" ? "Tech:" : "Technologies:";
+                    const tech = flatten(exp.technologies);
+                    const bullets = flatten(exp.description);
+                    const dates = enDash(exp.startDate, exp.endDate);
+                    return (
+                        <div key={i} className="rp-entry">
+                            {t === "professional" ? (
+                                // \hfill dates  /  \textbf{ {{role}} } --- {{company}} \hfill {{location}}
+                                <>
+                                    <EntryLine className="rp-line-right">
+                                        <Right>{dates}</Right>
+                                    </EntryLine>
+                                    <EntryLine>
+                                        <span>
+                                            <strong>{exp.role}</strong> — {exp.company}
+                                        </span>
+                                        <Right>{exp.location}</Right>
+                                    </EntryLine>
+                                </>
+                            ) : t === "minimal" ? (
+                                // \textbf{ {{role}} } --- {{company}} \hfill dates
+                                <>
+                                    <EntryLine>
+                                        <span>
+                                            <strong>{exp.role}</strong> — <strong>{exp.company}</strong>
+                                        </span>
+                                        <Right>{dates}</Right>
+                                    </EntryLine>
+                                    {exp.location && <div>{exp.location}</div>}
+                                </>
+                            ) : t === "modern" ? (
+                                // \textbf{ {{role}} } | \textbf{ {{company}} } \hfill dates
+                                <>
+                                    <EntryLine>
+                                        <span>
+                                            <strong>{exp.role}</strong> | <strong>{exp.company}</strong>
+                                        </span>
+                                        <Right>{dates}</Right>
+                                    </EntryLine>
+                                    {exp.location && <div>{exp.location}</div>}
+                                </>
+                            ) : (
+                                // classic: \textbf{ {{role}} } at \textbf{ {{company}} } \hfill dates
+                                <>
+                                    <EntryLine>
+                                        <span>
+                                            <strong>{exp.role}</strong> at <strong>{exp.company}</strong>
+                                        </span>
+                                        <Right>{dates}</Right>
+                                    </EntryLine>
+                                    {exp.location && <div>{exp.location}</div>}
+                                </>
+                            )}
+                            <Bullets items={bullets} />
+                            <Tech prefix={techPrefix} items={tech} />
+                        </div>
+                    );
+                })}
+            </section>
+        );
+    }
+
+    // ── Projects ──
+    function renderProjects() {
+        if (!projects.length) return null;
+        return (
+            <section className="rp-section">
+                <SectionHeading title={TITLES.projects[t]} template={t} />
+                {projects.map((proj, i) => {
+                    const techPrefix = t === "minimal" ? "Tech:" : "Technologies:";
+                    const tech = flatten(proj.technologies);
+                    const bullets = flatten(proj.description);
+                    return (
+                        <div key={i} className="rp-entry">
+                            {t === "professional" ? (
+                                // \hfill GitHub \, | \, Live   (right-aligned) /  \textbf{ {{name}} }
+                                <>
+                                    <EntryLine className="rp-line-right">
+                                        <Right>
+                                            {[proj.github && "GitHub", proj.link && "Live"]
+                                                .filter(Boolean)
+                                                .join("  |  ")}
+                                        </Right>
+                                    </EntryLine>
+                                    <div>
+                                        <strong>{proj.name}</strong>
+                                    </div>
+                                </>
+                            ) : t === "minimal" ? (
+                                // \textbf{ {{name}} } --- GitHub --- Demo
+                                <div>
+                                    <strong>{proj.name}</strong>
+                                    {proj.github && <> — GitHub</>}
+                                    {proj.link && <> — Demo</>}
+                                </div>
+                            ) : t === "modern" ? (
+                                // \textbf{ {{name}} } \quad | \quad GitHub \quad | \quad Live Demo
+                                <div>
+                                    <strong>{proj.name}</strong>
+                                    {proj.github && (
+                                        <>
+                                            <span className="rp-quad" />
+                                            |<span className="rp-quad" />
+                                            GitHub
+                                        </>
+                                    )}
+                                    {proj.link && (
+                                        <>
+                                            <span className="rp-quad" />
+                                            |<span className="rp-quad" />
+                                            Live Demo
+                                        </>
+                                    )}
+                                </div>
+                            ) : (
+                                // classic: \textbf{ {{name}} } \hfill GitHub \hfill Live Demo
+                                <EntryLine>
+                                    <span>
+                                        <strong>{proj.name}</strong>
+                                    </span>
+                                    {proj.github && <span>GitHub</span>}
+                                    {proj.link && <span>Live Demo</span>}
+                                </EntryLine>
+                            )}
+                            <Bullets items={bullets} />
+                            <Tech prefix={techPrefix} items={tech} />
+                        </div>
+                    );
+                })}
+            </section>
+        );
+    }
+
+    // ── Certifications ──
+    function renderCertifications() {
+        if (!certs.length) return null;
+        const title = TITLES.certifications[t];
+        return (
+            <section className="rp-section">
+                <SectionHeading title={title} template={t} />
+                {t === "modern" ? (
+                    // \begin{itemize} \item \textbf{ {{name}} } -- {{issuer}} ({{date}}) \hfill Link
+                    <ul className="rp-bullets rp-cert-modern">
+                        {certs.map((c, i) => (
+                            <li key={i}>
+                                <span>
+                                    <strong>{c.name}</strong> – {c.issuer}
+                                    {c.date && <> ({c.date})</>}
+                                </span>
+                                {c.link && <Right>Link</Right>}
+                            </li>
+                        ))}
+                    </ul>
+                ) : t === "minimal" ? (
+                    // \textbf{ {{name}} } \hfill {{date}}  /  {{issuer}} --- Link
+                    certs.map((c, i) => (
+                        <div key={i} className="rp-entry">
+                            <EntryLine>
+                                <strong>{c.name}</strong>
+                                <Right>{c.date}</Right>
+                            </EntryLine>
+                            <div>
+                                {c.issuer}
+                                {c.link && <> — Link</>}
+                            </div>
+                        </div>
+                    ))
+                ) : t === "classic" ? (
+                    // \textbf{ {{name}} } -- {{issuer}} \hfill {{date}} \hfill Link
+                    certs.map((c, i) => (
+                        <div key={i} className="rp-entry">
+                            <EntryLine>
+                                <span>
+                                    <strong>{c.name}</strong> – {c.issuer}
+                                </span>
+                                {c.date && <span>{c.date}</span>}
+                                {c.link && <span>Link</span>}
+                            </EntryLine>
+                        </div>
+                    ))
+                ) : (
+                    // professional: \textbf{ {{name}} } --- {{issuer}} \hfill {{date}} \hfill Verify
+                    certs.map((c, i) => (
+                        <div key={i} className="rp-entry">
+                            <EntryLine>
+                                <span>
+                                    <strong>{c.name}</strong> — {c.issuer}
+                                </span>
+                                {c.date && <span>{c.date}</span>}
+                                {c.link && <span>Verify</span>}
+                            </EntryLine>
+                        </div>
+                    ))
+                )}
+            </section>
+        );
+    }
+
     return (
-        <div className={`resume-preview rp-${template}`}>
+        <div className={`resume-preview rp-${t}`}>
             {/* Header */}
-            <div className={`rp-header rp-header-${template}`}>
-                {p.name && <h1 className="rp-name" style={accentColor}>{p.name}</h1>}
-
-                <div className="rp-contact">
-                    {[p.email, p.phone, p.location].filter(Boolean).join(isMinimal ? "  ·  " : "  |  ")}
-                </div>
-
-                <div className="rp-links">
-                    {p.linkedin && <span style={accentColor}>LinkedIn</span>}
-                    {p.linkedin && p.github && <span className="rp-sep">|</span>}
-                    {p.github && <span style={accentColor}>GitHub</span>}
-                    {((p.linkedin || p.github) && p.portfolio) && <span className="rp-sep">|</span>}
-                    {p.portfolio && <span style={accentColor}>Portfolio</span>}
-                </div>
-
-                {!isMinimal && <div className="rp-header-rule" style={{ borderColor: "#ddd" }} />}
+            <div className={`rp-header ${t === "minimal" ? "rp-header-left" : "rp-header-center"}`}>
+                {p.name && (
+                    <h1 className="rp-name" style={t === "modern" ? { color: accent } : undefined}>
+                        {p.name}
+                    </h1>
+                )}
+                {contacts.length > 0 && <div className="rp-contact">{contacts.join(contactSep)}</div>}
+                {headerLinks && <div className="rp-links">{headerLinks}</div>}
             </div>
 
             {/* Summary */}
             {resumeData.summary && (
                 <section className="rp-section">
-                    <SectionHeading title="Professional Summary" template={template} accentColor={accentColor} />
+                    <SectionHeading title={TITLES.summary[t]} template={t} />
                     <p className="rp-text">{resumeData.summary}</p>
                 </section>
             )}
@@ -129,126 +483,16 @@ function ResumePreview({ resumeData, template }) {
             {renderSkills()}
 
             {/* Education */}
-            {education.length > 0 && (
-                <section className="rp-section">
-                    <SectionHeading title="Education" template={template} accentColor={accentColor} />
-                    {education.map((edu, i) => (
-                        <div key={i} className="rp-entry">
-                            {isMinimal ? (
-                                <>
-                                    <div className="rp-entry-row">
-                                        <strong>{edu.institution}</strong>
-                                        {edu.location && <span className="rp-meta">, {edu.location}</span>}
-                                    </div>
-                                    <div className="rp-entry-sub">
-                                        {[edu.degree, edu.field].filter(Boolean).join(" in ")}
-                                        {edu.startDate && <span className="rp-meta"> — {edu.startDate}–{edu.endDate}</span>}
-                                        {edu.cgpa && <span className="rp-meta"> | CGPA: {edu.cgpa}</span>}
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="rp-entry-row">
-                                        <strong>{[edu.degree, edu.field].filter(Boolean).join(" in ")}</strong>
-                                        {edu.institution && <span> — {edu.institution}</span>}
-                                    </div>
-                                    <div className="rp-entry-meta">
-                                        {[edu.startDate, edu.endDate].filter(Boolean).join(" — ")}
-                                        {edu.location && <span> | {edu.location}</span>}
-                                        {edu.cgpa && <span> | CGPA: {edu.cgpa}</span>}
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    ))}
-                </section>
-            )}
+            {renderEducation()}
 
             {/* Experience */}
-            {experience.length > 0 && (
-                <section className="rp-section">
-                    <SectionHeading title="Work Experience" template={template} accentColor={accentColor} />
-                    {experience.map((exp, i) => (
-                        <div key={i} className="rp-entry">
-                            {isMinimal ? (
-                                <>
-                                    <div className="rp-entry-row">
-                                        <strong>{exp.role}</strong>
-                                    </div>
-                                    <div className="rp-entry-sub">
-                                        {exp.company}{exp.location ? `, ${exp.location}` : ""}
-                                        {[exp.startDate, exp.endDate].filter(Boolean).length > 0 &&
-                                            <span className="rp-meta"> — {exp.startDate}–{exp.endDate}</span>}
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="rp-entry-row">
-                                        <strong>{exp.role}</strong>
-                                        {exp.company && <span> — {exp.company}</span>}
-                                    </div>
-                                    <div className="rp-entry-meta">
-                                        {[exp.startDate, exp.endDate].filter(Boolean).join(" — ")}
-                                        {exp.location && <span> | {exp.location}</span>}
-                                    </div>
-                                </>
-                            )}
-                            <ul className="rp-bullets">
-                                {flatten(exp.description).map((d, j) => (
-                                    <li key={j}>{d}</li>
-                                ))}
-                            </ul>
-                            {flatten(exp.technologies).length > 0 && (
-                                <div className="rp-tech">
-                                    <em>Technologies:</em> {flatten(exp.technologies).join(", ")}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </section>
-            )}
+            {renderExperience()}
 
             {/* Projects */}
-            {projects.length > 0 && (
-                <section className="rp-section">
-                    <SectionHeading title={isProfessional ? "Key Projects" : "Projects"} template={template} accentColor={accentColor} />
-                    {projects.map((proj, i) => (
-                        <div key={i} className="rp-entry">
-                            <div className="rp-entry-row">
-                                <strong>{proj.name}</strong>
-                                {proj.github && <span className="rp-link" style={accentColor}> | GitHub</span>}
-                                {proj.link && <span className="rp-link" style={accentColor}> | Live Demo</span>}
-                            </div>
-                            <ul className="rp-bullets">
-                                {flatten(proj.description).map((d, j) => (
-                                    <li key={j}>{d}</li>
-                                ))}
-                            </ul>
-                            {flatten(proj.technologies).length > 0 && (
-                                <div className="rp-tech">
-                                    <em>Technologies:</em> {flatten(proj.technologies).join(", ")}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </section>
-            )}
+            {renderProjects()}
 
             {/* Certifications */}
-            {certs.length > 0 && (
-                <section className="rp-section">
-                    <SectionHeading title={isProfessional ? "Certifications & Licenses" : "Certifications"} template={template} accentColor={accentColor} />
-                    {certs.map((cert, i) => (
-                        <div key={i} className="rp-entry">
-                            <div className="rp-entry-row">
-                                <strong>{cert.name}</strong>
-                                {cert.issuer && <span> — {cert.issuer}</span>}
-                                {cert.date && <span className="rp-entry-meta"> ({cert.date})</span>}
-                            </div>
-                        </div>
-                    ))}
-                </section>
-            )}
+            {renderCertifications()}
         </div>
     );
 }

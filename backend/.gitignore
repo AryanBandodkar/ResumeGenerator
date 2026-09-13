@@ -29,6 +29,10 @@ tmp/
 temp/
 *.tmp
 
+# Downloaded LaTeX toolchain binaries (tectonic, pandoc)
+# Installed automatically by `npm install` via scripts/install-binaries.mjs
+bin/
+
 # Uploaded resumes / user files
 uploads/
 

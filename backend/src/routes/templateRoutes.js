@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { renderTemplate, listTemplates, VALID_TEMPLATES } from "../services/templateRenderer.js";
-import { generateResumeFile } from "../services/fileGenerator.js";
+import { generateResumeFile } from "../services/latexService.js";
 
 const router = Router();
 
