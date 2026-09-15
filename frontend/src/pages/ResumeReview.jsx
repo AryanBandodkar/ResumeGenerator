@@ -209,7 +209,7 @@ function ResumeReview() {
 
         <div className="page-heading">
           <span className="step-label">
-            STEP 2 OF 2
+            STEP 2 OF 3
           </span>
 
           <h1>Review your information</h1>
