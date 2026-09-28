@@ -69,8 +69,7 @@ export async function login(req, res) {
 
     const name = data.user.user_metadata?.full_name || email.split("@")[0];
 
-    // Ensure a profile row exists (covers users who signed up before this
-    // feature, or signed up while email confirmation was enabled).
+    // Ensure a profile row exists (covers users who signed up before this feature, or signed up while email confirmation was enabled).
     await supabase
         .from("profiles")
         .upsert({ id: data.user.id, full_name: name, updated_at: new Date().toISOString() });

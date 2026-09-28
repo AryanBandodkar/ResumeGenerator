@@ -18,11 +18,22 @@ const RESUME_SCHEMA = {
         role: "",
         jobDescription: "",
     },
+    projectRecommendations: [
+        {
+            title: "",
+            description: "",
+            skillsTargeted: [],
+            reason: "",
+            difficulty: "",
+            estimatedScope: "",
+            resumeValue: "",
+        },
+    ],
 };
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const SYSTEM_PROMPT = `You are a resume parser. Extract all information from the provided resume text and return it as JSON.
+const SYSTEM_PROMPT = `You are a resume parser and career advisor. Extract all information from the provided resume text and return it as JSON.
 
 Return ONLY valid JSON matching this exact schema (no markdown, no commentary):
 
@@ -40,7 +51,29 @@ Rules:
 - Fill dates as strings (e.g. "2023" or "May 2026"). Leave missing optional fields as empty strings / empty arrays.
 - "job.role" is the job title the person is targeting.
 - "job.jobDescription" is the full job description text. If not provided, leave it empty.
-- Never invent information that is not present in the text.`;
+- Never invent information that is not present in the text.
+
+Project Recommendations (projectRecommendations):
+- Analyze the job description to identify important technical skills required for the target role.
+- Compare these with the candidate's demonstrated skills (from skills array, projects[].technologies, experience[].technologies).
+- Identify the most important skill gaps: skills explicitly mentioned in the job description, repeated/emphasized, core to the role, and missing from the resume.
+- Recommend approximately 3 practical projects that would help the candidate demonstrate these missing skills.
+- Each project should cover multiple missing skills when possible (e.g., one project using Express + PostgreSQL + REST APIs + Auth).
+- Projects should be realistic for a fresher/junior developer - completable in days to a few weeks, not months.
+- Consider the candidate's existing skills: if they know React but need backend skills, suggest a full-stack project connecting React to a new Node/Express/PostgreSQL backend.
+- Do NOT recommend projects that mostly demonstrate skills the candidate already has.
+- Do NOT fabricate missing skills merely to generate recommendations.
+- If the candidate has no meaningful skill gaps, recommend fewer projects or projects that deepen important role-specific skills.
+- Frame recommendations as opportunities to PRACTICE or DEMONSTRATE missing skills, not as guarantees of proficiency.
+
+For each recommendation, include:
+- title: Concise project name
+- description: 1-2 sentence overview of what to build
+- skillsTargeted: Array of specific technologies/skills this project demonstrates
+- reason: Why this project addresses the candidate's specific gaps for this job
+- difficulty: "Beginner" | "Intermediate" | "Advanced"
+- estimatedScope: "Small" | "Medium" (portfolio-appropriate scope)
+- resumeValue: What this project shows to employers`;
 
 export async function parseResumeWithGroq(text, job = {}) {
     if (!text || !text.trim()) {
@@ -101,6 +134,15 @@ function mergeWithSchema(parsed) {
                 ...(typeof item === "object" && item !== null ? item : {}),
             }));
         }
+    }
+
+    // projectRecommendations
+    if (Array.isArray(parsed.projectRecommendations)) {
+        const template = result.projectRecommendations[0] || {};
+        result.projectRecommendations = parsed.projectRecommendations.map((item) => ({
+            ...template,
+            ...(typeof item === "object" && item !== null ? item : {}),
+        }));
     }
 
     // job (may not exist in the model output)

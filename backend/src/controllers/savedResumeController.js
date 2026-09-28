@@ -1,12 +1,12 @@
-import { supabase } from "../services/supabaseClient.js";
 import { generateResumeFile } from "../services/latexService.js";
 import { VALID_TEMPLATES } from "../services/templateRenderer.js";
 
 // POST /api/resumes
 // Save a resume to the authenticated user's history.
-// Body: { title?, template, format, resume_data }
+// Body: { title?, template, format, resume_data, company_name? }
 export async function saveResume(req, res) {
-    const { title, template, format, resume_data } = req.body || {};
+    const { supabase } = req;
+    const { title, template, format, resume_data, company_name } = req.body || {};
 
     if (!resume_data || typeof resume_data !== "object") {
         return res.status(400).json({
@@ -29,6 +29,55 @@ export async function saveResume(req, res) {
         });
     }
 
+    // Group the resume with the others saved for the same job (title + company).
+    // Resumes saved without a target role stay ungrouped.
+    const jobTitle =
+        typeof resume_data.job?.role === "string" && resume_data.job.role.trim()
+            ? resume_data.job.role.trim()
+            : null;
+
+    const company =
+        typeof company_name === "string" && company_name.trim() ? company_name.trim() : null;
+
+    let jobApplicationId = null;
+
+    if (jobTitle) {
+        let lookup = supabase
+            .from("job_applications")
+            .select("id")
+            .eq("user_id", req.user.id)
+            .eq("job_title", jobTitle);
+
+        lookup = company ? lookup.eq("company_name", company) : lookup.is("company_name", null);
+
+        const { data: existing, error: lookupError } = await lookup.limit(1).maybeSingle();
+
+        if (lookupError) {
+            return res.status(500).json({ success: false, message: lookupError.message });
+        }
+
+        if (existing) {
+            jobApplicationId = existing.id;
+        } else {
+            const { data: created, error: createError } = await supabase
+                .from("job_applications")
+                .insert({
+                    user_id: req.user.id,
+                    job_title: jobTitle,
+                    company_name: company,
+                    job_description: resume_data.job?.jobDescription || null,
+                })
+                .select("id")
+                .single();
+
+            if (createError) {
+                return res.status(500).json({ success: false, message: createError.message });
+            }
+
+            jobApplicationId = created.id;
+        }
+    }
+
     const { data, error } = await supabase
         .from("resumes")
         .insert({
@@ -37,6 +86,7 @@ export async function saveResume(req, res) {
             template,
             format,
             resume_data,
+            job_application_id: jobApplicationId,
         })
         .select("id, title, template, format, created_at, updated_at")
         .single();
@@ -51,9 +101,11 @@ export async function saveResume(req, res) {
 // GET /api/resumes
 // List the authenticated user's saved resumes, newest first.
 export async function listResumes(req, res) {
+    const { supabase } = req;
+
     const { data, error } = await supabase
         .from("resumes")
-        .select("id, title, template, format, created_at, updated_at")
+        .select("id, title, template, format, job_application_id, created_at, updated_at")
         .eq("user_id", req.user.id)
         .order("created_at", { ascending: false });
 
@@ -67,6 +119,7 @@ export async function listResumes(req, res) {
 // GET /api/resumes/:id
 // Fetch the full resume (including resume_data) for viewing or editing.
 export async function getResume(req, res) {
+    const { supabase } = req;
     const { id } = req.params;
 
     const { data, error } = await supabase
@@ -86,6 +139,7 @@ export async function getResume(req, res) {
 // GET /api/resumes/:id/download
 // Regenerate the file from stored data and stream it to the client.
 export async function downloadResume(req, res) {
+    const { supabase } = req;
     const { id } = req.params;
 
     const { data, error } = await supabase
@@ -119,7 +173,23 @@ export async function downloadResume(req, res) {
 // DELETE /api/resumes/:id
 // Remove one of the authenticated user's saved resumes.
 export async function deleteResume(req, res) {
+    const { supabase } = req;
     const { id } = req.params;
+
+    const { data: target, error: targetError } = await supabase
+        .from("resumes")
+        .select("id, job_application_id")
+        .eq("id", id)
+        .eq("user_id", req.user.id)
+        .maybeSingle();
+
+    if (targetError) {
+        return res.status(500).json({ success: false, message: targetError.message });
+    }
+
+    if (!target) {
+        return res.status(404).json({ success: false, message: "Resume not found." });
+    }
 
     const { data, error } = await supabase
         .from("resumes")
@@ -134,6 +204,24 @@ export async function deleteResume(req, res) {
 
     if (!data || data.length === 0) {
         return res.status(404).json({ success: false, message: "Resume not found." });
+    }
+
+    // The selected resume is reset by the foreign key (on delete set null).
+    // The group only exists to hold resumes, so drop it once it is empty.
+    if (target.job_application_id) {
+        const { count } = await supabase
+            .from("resumes")
+            .select("id", { count: "exact", head: true })
+            .eq("job_application_id", target.job_application_id)
+            .eq("user_id", req.user.id);
+
+        if (count === 0) {
+            await supabase
+                .from("job_applications")
+                .delete()
+                .eq("id", target.job_application_id)
+                .eq("user_id", req.user.id);
+        }
     }
 
     res.json({ success: true });

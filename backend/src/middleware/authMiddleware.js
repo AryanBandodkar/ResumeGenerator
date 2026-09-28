@@ -1,4 +1,4 @@
-import { supabase } from "../services/supabaseClient.js";
+import { supabase, supabaseForUser } from "../services/supabaseClient.js";
 
 export async function requireAuth(req, res, next) {
     const token = req.headers.authorization?.replace("Bearer ", "");
@@ -20,5 +20,7 @@ export async function requireAuth(req, res, next) {
     }
 
     req.user = data.user;
+    // Queries for user data run as the signed-in user so RLS applies.
+    req.supabase = supabaseForUser(token);
     next();
 }

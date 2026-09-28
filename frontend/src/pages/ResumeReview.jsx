@@ -71,6 +71,51 @@ function computeAnalysis(skills, jobDescription) {
   };
 }
 
+// Render project recommendation cards from AI response
+function renderProjectRecommendations(recommendations) {
+  if (!recommendations || !recommendations.length) return null;
+
+  return (
+    <div className="project-recommendations">
+      <div className="match-group">
+        <h3>Recommended Projects</h3>
+        {recommendations.map((project, index) => (
+          <div key={index} className="project-card">
+            <div className="project-header">
+              <h4>{project.title}</h4>
+              {project.difficulty && (
+                <span className={`project-difficulty ${project.difficulty.toLowerCase()}`}>{project.difficulty}</span>
+              )}
+            </div>
+            <p className="project-description">{project.description}</p>
+            {project.skillsTargeted && project.skillsTargeted.length > 0 && (
+              <div className="project-skills">
+                <span className="skills-label">Skills You'll Practice:</span>
+                <div className="skills-tags">
+                  {project.skillsTargeted.map((skill, i) => (
+                    <span key={i} className="skill-tag">{skill}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {project.reason && (
+              <p className="project-reason"><strong>Why this helps:</strong> {project.reason}</p>
+            )}
+            <div className="project-meta">
+              {project.estimatedScope && (
+                <span className="meta-item">Scope: {project.estimatedScope}</span>
+              )}
+              {project.resumeValue && (
+                <span className="meta-item">Resume Value: {project.resumeValue}</span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ResumeReview() {
   const navigate = useNavigate();
 
@@ -904,6 +949,9 @@ function ResumeReview() {
               )}
 
             </div>
+
+            {/* PROJECT RECOMMENDATIONS */}
+            {renderProjectRecommendations(data.projectRecommendations)}
 
           </aside>
 

@@ -9,6 +9,7 @@ function ResumeOutput() {
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [companyName, setCompanyName] = useState("");
 
   const {
     resumeData,
@@ -50,6 +51,7 @@ function ResumeOutput() {
           template,
           format,
           resume_data: resumeData,
+          company_name: companyName,
         }),
       });
 
@@ -125,6 +127,26 @@ function ResumeOutput() {
         <div className="output-preview-wrapper">
           <ResumePreview resumeData={resumeData} template={template} />
         </div>
+
+        {/* COMPANY NAME (groups saved resumes by job) */}
+        {isLoggedIn && !saved && (
+          <div className="save-company">
+            <label htmlFor="company-name">Company name (optional)</label>
+
+            <input
+              id="company-name"
+              type="text"
+              placeholder="e.g. ABC Company"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+            />
+
+            <p>
+              Resumes you save for the same role and company are grouped
+              together on the My Resumes page.
+            </p>
+          </div>
+        )}
 
         {/* ACTION BUTTONS */}
         <div className="output-actions">

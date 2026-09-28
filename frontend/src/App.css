@@ -784,6 +784,119 @@ select {
   color: #6d28d9;
 }
 
+/* =========================
+   PROJECT RECOMMENDATIONS
+   ========================= */
+
+.project-recommendations {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5dfea;
+}
+
+.project-card {
+  background: #faf9fc;
+  border: 1px solid #e5dfea;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  gap: 10px;
+}
+
+.project-header h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #17131f;
+}
+
+.project-difficulty {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.project-description {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #4a4452;
+  line-height: 1.5;
+}
+
+.project-skills {
+  margin-bottom: 10px;
+}
+
+.skills-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 650;
+  color: #7c3aed;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.project-reason {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #6b6475;
+  line-height: 1.5;
+}
+
+.project-reason strong {
+  color: #292331;
+}
+
+.project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e5dfea;
+}
+
+.meta-item {
+  font-size: 11px;
+  color: #817888;
+  background: #f0ebff;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* Difficulty-specific colors */
+.project-difficulty.beginner {
+  background: #ecfdf5;
+  color: #15803d;
+}
+
+.project-difficulty.intermediate {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.project-difficulty.advanced {
+  background: #fef2f2;
+  color: #c0392b;
+}
+
 .review-actions {
   display: flex;
   justify-content: flex-end;
